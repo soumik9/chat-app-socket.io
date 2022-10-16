@@ -1,12 +1,30 @@
 import Head from 'next/head'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import useSocket from '../hooks/useSocket';
 
 export default function Home() {
 
+  // hooks
+  const { socket } = useSocket();
+
+  // states
   const [message, setMessage] = useState('');
 
-  const handleSend = () => {
+  // socket emit
+  useEffect(() => {
+    if (!socket) return;
+    socket.on('message-form-server', () => {
+      console.log('message got');
+    })
+
+  }, [socket])
+
+  // messge send fn
+  const handleSend = (e) => {
     e.preventDefault();
+    if (message) {
+      socket.emit('send-message', { message });
+    }
   }
 
   return (
@@ -17,26 +35,25 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <form action="" className='text-center mt-5' onSubmit={handleSend}>
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2" for="password">
-            Password
-          </label>
-          <input
-            id="password"
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="shadow appearance-none border border-red-500 rounded py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="Write your message here"
-          />
-          <p className="text-red-500 text-xs italic">Please choose a password.</p>
-        </div>
+      <div className="flex justify-center">
+        <form className='mt-5' onSubmit={handleSend}>
 
-        <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" >
-          Send
-        </button>
-      </form>
+          <div className="mb-3 xl:w-96">
+            <label htmlFor="message" className="form-label inline-block mb-2 text-gray-700 !text-start">Mesage</label>
+            <input
+              type="text"
+              className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+              id="message"
+              placeholder="Write your message here"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+          </div>
+
+          <button type="submit" className="bg-blue-500 w-max hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Send</button>
+
+        </form>
+      </div>
 
     </div>
   )

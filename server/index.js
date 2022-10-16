@@ -30,7 +30,12 @@ readdirSync("./routes").map((r) => app.use("/api", require(`./routes/${r}`)));
 
 // socket new connection
 io.on("connection", (socket) => {
-  console.log("Socket connection is ready");
+  // console.log("Socket connection is ready");
+
+  socket.on('send-message', (data) => {
+    socket.emit('message-form-server', data);
+    console.log('working', data)
+  })
 })
 
 // port listening
