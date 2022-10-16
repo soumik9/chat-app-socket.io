@@ -9,17 +9,18 @@ export default function Home() {
 
   // states
   const [message, setMessage] = useState('');
+  const [chat, setChat] = useState([]);
 
   // socket emit
   useEffect(() => {
     if (!socket) return;
-    socket.on('message-form-server', () => {
-      console.log('message got');
+    socket.on('message-form-server', (data) => {
+      setChat((prev) => [...prev, data.message])
     })
 
   }, [socket])
 
-  // messge send fn
+  // messge send fn 
   const handleSend = (e) => {
     e.preventDefault();
     if (message) {
@@ -35,8 +36,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <div className="flex justify-center mt-5">
+        <div className='bg-[#34495e] p-[3px_20px] rounded w-[400px]'>
+          {chat.map((message, index) => <div key={index}>
+            <p className='text-[24px] my-2 text-white' >{message}</p>
+          </div>)}
+        </div>
+      </div>
+
       <div className="flex justify-center">
-        <form className='mt-5' onSubmit={handleSend}>
+        <form className='mt-5 w-[400px]' onSubmit={handleSend}>
 
           <div className="mb-3 xl:w-96">
             <label htmlFor="message" className="form-label inline-block mb-2 text-gray-700 !text-start">Mesage</label>

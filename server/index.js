@@ -33,10 +33,16 @@ io.on("connection", (socket) => {
   // console.log("Socket connection is ready");
 
   socket.on('send-message', (data) => {
-    socket.emit('message-form-server', data);
+    socket.broadcast.emit('message-form-server', data);
     console.log('working', data)
   })
+
+  socket.on("disconnect", (socket) => {
+    console.log(colors.red("disconnected socket"));
+  })
 })
+
+
 
 // port listening
 const startServer = (port) => {
