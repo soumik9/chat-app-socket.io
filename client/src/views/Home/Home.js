@@ -11,13 +11,18 @@ const Home = (props) => {
     // states
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([]);
+    const [isTyping, setTyping] = useState(false);
 
     // socket emit
     useEffect(() => {
         if (!socket) return;
+
         socket.on('message-form-server', (data) => {
             setChat((prev) => [...prev, {message: data.message, received: true}])
         })
+
+        socket.on('typing-started-form-server', () => setTyping(true))
+        socket.on('typing-stopped-form-server', () => setTyping(false))
 
     }, [socket])
 
@@ -39,6 +44,7 @@ const Home = (props) => {
                     message={message}
                     setMessage={setMessage}
                     setChat={setChat}
+                    isTyping={isTyping}
                 />
              
             </div>

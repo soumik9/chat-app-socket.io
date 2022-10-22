@@ -34,7 +34,17 @@ io.on("connection", (socket) => {
 
   socket.on('send-message', (data) => {
     socket.broadcast.emit('message-form-server', data);
-    console.log('working', data)
+    // console.log('working', data)
+  })
+
+  socket.on('typing-started', () => {
+    socket.broadcast.emit('typing-started-form-server');
+    // console.log('working', data)
+  })
+
+  socket.on('typing-stopped', () => {
+    socket.broadcast.emit('typing-stopped-form-server');
+    // console.log('working', data)
   })
 
   socket.on("disconnect", (socket) => {
