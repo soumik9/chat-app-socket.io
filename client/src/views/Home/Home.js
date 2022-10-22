@@ -16,18 +16,10 @@ const Home = (props) => {
     useEffect(() => {
         if (!socket) return;
         socket.on('message-form-server', (data) => {
-            setChat((prev) => [...prev, data.message])
+            setChat((prev) => [...prev, {message: data.message, received: true}])
         })
 
     }, [socket])
-
-    // messge send fn 
-    const handleSend = (e) => {
-        e.preventDefault();
-        if (message) {
-            socket.emit('send-message', { message });
-        }
-    }
 
     return (
         <div className='container mt-10'>
@@ -36,8 +28,8 @@ const Home = (props) => {
 
                 <div className="flex justify-center mt-5">
                     <div className='bg-[#34495e] p-[3px_20px] rounded w-[400px]'>
-                        {chat.map((message, index) => <div key={index}>
-                            <p className='text-[24px] my-2 text-white' >{message}</p>
+                        {chat.map((data, index) => <div key={index}>
+                            <p className={`text-[24px] my-2 text-white ${data.received ? 'text-left' : 'text-right'}`} >{data.message}</p>
                         </div>)}
                     </div>
                 </div>
@@ -46,6 +38,7 @@ const Home = (props) => {
                     socket={socket}
                     message={message}
                     setMessage={setMessage}
+                    setChat={setChat}
                 />
              
             </div>

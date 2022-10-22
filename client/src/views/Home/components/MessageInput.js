@@ -1,13 +1,15 @@
 import React from 'react'
 import { AiOutlineSend } from 'react-icons/ai'
 
-function MessageInput({ socket, message, setMessage }) {
+function MessageInput({ socket, message, setMessage, setChat }) {
 
     // messge send fn 
     const handleSend = (e) => {
         e.preventDefault();
         if (message) {
             socket.emit('send-message', { message });
+            setChat((prev) => [...prev, {message, received: false}]);
+            setMessage('')
         }
     }
 
