@@ -1,32 +1,8 @@
 import Head from 'next/head'
-import { useEffect, useState } from 'react';
-import useSocket from '../hooks/useSocket';
+import Home from '../views/Home/Home'
 
-export default function Home() {
+export default function Index() {
 
-  // hooks
-  const { socket } = useSocket();
-
-  // states
-  const [message, setMessage] = useState('');
-  const [chat, setChat] = useState([]);
-
-  // socket emit
-  useEffect(() => {
-    if (!socket) return;
-    socket.on('message-form-server', (data) => {
-      setChat((prev) => [...prev, data.message])
-    })
-
-  }, [socket])
-
-  // messge send fn 
-  const handleSend = (e) => {
-    e.preventDefault();
-    if (message) {
-      socket.emit('send-message', { message });
-    }
-  }
 
   return (
     <div>
@@ -36,33 +12,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="flex justify-center mt-5">
-        <div className='bg-[#34495e] p-[3px_20px] rounded w-[400px]'>
-          {chat.map((message, index) => <div key={index}>
-            <p className='text-[24px] my-2 text-white' >{message}</p>
-          </div>)}
-        </div>
-      </div>
-
-      <div className="flex justify-center">
-        <form className='mt-5 w-[400px]' onSubmit={handleSend}>
-
-          <div className="mb-3 xl:w-96">
-            <label htmlFor="message" className="form-label inline-block mb-2 text-gray-700 !text-start">Mesage</label>
-            <input
-              type="text"
-              className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-              id="message"
-              placeholder="Write your message here"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-          </div>
-
-          <button type="submit" className="bg-blue-500 w-max hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Send</button>
-
-        </form>
-      </div>
+      <Home />
 
     </div>
   )
